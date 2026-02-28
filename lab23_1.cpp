@@ -20,19 +20,73 @@ string toUpperStr(string x){
     return y;
 }
 
-void importDataFromFile(){
+void importDataFromFile(string filename, vector<string>& names, vector<int>& scores, vector<char>& grades){
+    ifstream fin(filename.c_str());
+    string line;
+
+    while(getline(fin, line)){
+        char name[200];
+        int s1, s2, s3;
+        sscanf(line.c_str(), "%[^:]:%d %d %d", name, &s1, &s2, &s3);
+        int total = s1 + s2 + s3;
+        
+        names.push_back(string(name));
+        scores.push_back(total);
+        grades.push_back(score2grade(total));
+    }
+    fin.close();
 
 }
 
-void getCommand(){
+void getCommand(string &command, string &key){
+    cout << "Please input your command:\n";
+    string line;
+    getline(cin, line);
+    if(line.size() == 0){
+        getline(cin, line);
+    }
+    string::size_type pos = line.find(' ');
+    if(pos == string::npos){
+        command = line;
+        key = "";
+    }else{
+        command = line.substr(0, pos);
+        key = line.substr(pos + 1);
+    }
 
 }
 
-void searchName(){
+void searchName(vector<string>& names, vector<int>& scores, vector<char>& grades, string key){
+        bool found = false;
+    cout << "---------------------------------\n";
+    for(unsigned i = 0; i < names.size(); i++){
+        if(toUpperStr(names[i]) == key){
+            cout << names[i] << "'s score = " << scores[i] << endl;
+            cout << names[i] << "'s grade = " << grades[i] << endl;
+            found = true;
+            break;
+        }
+    }
+
+    if(!found){cout << "Cannot found.\n";}
+    cout << "---------------------------------\n";
 
 }
 
-void searchGrade(){
+void searchGrade(vector<string> &names, vector<int> &scores, vector<char> &grades, string key){
+        bool found = false;
+    cout << "---------------------------------\n";
+
+    char g = key[0];
+    for(unsigned i = 0; i < grades.size(); i++){
+        if(grades[i] == g){
+            cout << names[i] << " (" << scores[i] << ")\n";
+            found = true;
+        }
+    }
+
+    if(!found){cout << "Cannot found.\n";}
+    cout << "---------------------------------\n";
 
 }
 
